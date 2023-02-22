@@ -95,7 +95,7 @@ def valider_saisie():
     """Récupère les valeurs saisies et les ajoute à la base de données"""
 
     # Récupération des valeurs saisies dans les champs de saisie
-    type_immobilier = type_immobilier_entry.get()
+    type_immobilier = type_immobilier_value.get()
     adresse = adresse_entry.get()
     superficie_couvert = superficie_couvert_entry.get()
     superficie_jardin = superficie_jardin_entry.get()
@@ -186,18 +186,6 @@ if not os.path.isfile(db_file):
 label_type = tk.Label(root, text="Type de bien")
 label_type.grid(row=2, column=0)
 
-# Création des boutons radio
-type_var = tk.StringVar()
-type_var.set("Maison")
-radio1 = tk.Radiobutton(root, text="Maison", variable=type_var, value="Maison")
-radio2 = tk.Radiobutton(root, text="Appartement", variable=type_var, value="Appartement")
-radio1.grid(row=2, column=1)
-radio2.grid(row=2, column=2)
-type_bien_label = tk.Label(root, text="Type de bien")
-adresse_label = tk.Label(root, text="Adresse")
-superficie_label = tk.Label(root, text="Superficie (en m²)")
-nombre_pieces_label = tk.Label(root, text="Nombre de pièces")
-prix_label = tk.Label(root, text="Prix (en €)")
 
 # Placement des étiquettes sur la fenêtre
 type_bien_label.grid(row=0, column=0)
@@ -231,11 +219,28 @@ enregistrer_button.grid(row=5, column=1)
 ajout_bien_immobilier_window = tk.Toplevel()
 ajout_bien_immobilier_window.title("Ajouter un bien immobilier")
 
-# Création des champs de saisie
+# Création des boutons radio pour le type d'immobilier
 type_immobilier_label = tk.Label(ajout_bien_immobilier_window, text="Type d'immobilier :")
 type_immobilier_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
-type_immobilier_entry = tk.Entry(ajout_bien_immobilier_window)
-type_immobilier_entry.grid(row=0, column=1, padx=10, pady=10)
+
+type_immobilier_value = tk.StringVar(value="Appartement")
+type_immobilier_appartement_radio = tk.Radiobutton(
+    ajout_bien_immobilier_window,
+    text="Appartement",
+    variable=type_immobilier_value,
+    value="Appartement"
+)
+type_immobilier_appartement_radio.grid(row=0, column=1, padx=10, pady=10)
+
+type_immobilier_maison_radio = tk.Radiobutton(
+    ajout_bien_immobilier_window,
+    text="Maison",
+    variable=type_immobilier_value,
+    value="Maison"
+)
+type_immobilier_maison_radio.grid(row=0, column=2, padx=10, pady=10)
+
+
 
 adresse_label = tk.Label(ajout_bien_immobilier_window, text="Adresse :")
 adresse_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
