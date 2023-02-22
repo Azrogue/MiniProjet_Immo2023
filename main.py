@@ -15,7 +15,6 @@ db_file = "bien_immo.sqlite"
 #                SQL
 # ===================================
 
-
 def create_database(db_file):
     """Crée une base de données SQLite avec une table 'biens_immobiliers'"""
 
@@ -91,6 +90,17 @@ def inserer_bien_immobilier(db_file, bien):
     # Fermeture de la connexion
 #    conn.close()
 
+#Force l'utilisateur a entrer un nombre
+def validate_input(new_value):
+    if new_value == "":
+        return True
+
+    try:
+        int(new_value)
+        return True
+    except ValueError:
+        return False
+    
 def valider_saisie():
     """Récupère les valeurs saisies et les ajoute à la base de données"""
 
@@ -100,10 +110,10 @@ def valider_saisie():
     superficie_couvert = superficie_couvert_entry.get()
     superficie_jardin = superficie_jardin_entry.get()
     nombre_pieces = nombre_pieces_entry.get()
-    classe_energetique = classe_energetique_entry.get()
+    classe_energetique = classe_energetique_var.get()
     annee_construction = annee_construction_entry.get()
-    nature_gestion = nature_gestion_entry.get()
-    date_mise_marche = date_mise_marche_entry.get()
+    nature_gestion = nature_gestion_value.get()
+    #date_mise_marche = date_mise_marche_entry.get()
     prix = prix_entry.get()
 
     # Création d'un dictionnaire avec les valeurs saisies
@@ -116,7 +126,7 @@ def valider_saisie():
         'classe_energetique': classe_energetique,
         'annee_construction': annee_construction,
         'nature_gestion': nature_gestion,
-        'date_mise_marche': date_mise_marche,
+        #'date_mise_marche': date_mise_marche,
         'prix': prix
     }
 
@@ -183,37 +193,35 @@ if not os.path.isfile(db_file):
         messagebox.showinfo("Fermeture de Pymmobilier", "Le programme va se fermer")
         exit()
 
-label_type = tk.Label(root, text="Type de bien")
-label_type.grid(row=2, column=0)
-
+#label_type = tk.Label(root, text="Type de bien")
+#label_type.grid(row=2, column=0)
 
 # Placement des étiquettes sur la fenêtre
-type_bien_label.grid(row=0, column=0)
-
-adresse_label.grid(row=1, column=0)
-superficie_label.grid(row=2, column=0)
-nombre_pieces_label.grid(row=3, column=0)
-prix_label.grid(row=4, column=0)
+#type_bien_label.grid(row=0, column=0)
+#adresse_label.grid(row=1, column=0)
+#superficie_label.grid(row=2, column=0)
+#nombre_pieces_label.grid(row=3, column=0)
+#prix_label.grid(row=4, column=0)
 
 #Création des entrées pour chaque champ de formulaire
-type_bien_entry = tk.Entry(root)
-adresse_entry = tk.Entry(root)
-superficie_entry = tk.Entry(root)
-nombre_pieces_entry = tk.Entry(root)
-prix_entry = tk.Entry(root)
+#type_bien_entry = tk.Entry(root)
+#adresse_entry = tk.Entry(root)
+#superficie_entry = tk.Entry(root)
+#nombre_pieces_entry = tk.Entry(root)
+#prix_entry = tk.Entry(root)
 
 #Placement des entrées sur la fenêtre
-type_bien_entry.grid(row=0, column=1)
-adresse_entry.grid(row=1, column=1)
-superficie_entry.grid(row=2, column=1)
-nombre_pieces_entry.grid(row=3, column=1)
-prix_entry.grid(row=4, column=1)
+#type_bien_entry.grid(row=0, column=1)
+#adresse_entry.grid(row=1, column=1)
+#superficie_entry.grid(row=2, column=1)
+#nombre_pieces_entry.grid(row=3, column=1)
+#prix_entry.grid(row=4, column=1)
 
 #Création du bouton d'enregistrement
-enregistrer_button = tk.Button(root, text="Enregistrer")
+#enregistrer_button = tk.Button(root, text="Enregistrer")
 
 #Placement du bouton sur la fenêtre
-enregistrer_button.grid(row=5, column=1)
+#enregistrer_button.grid(row=5, column=1)
 
 # Création de la fenêtre d'ajout de bien immobilier
 ajout_bien_immobilier_window = tk.Toplevel()
@@ -230,7 +238,7 @@ type_immobilier_appartement_radio = tk.Radiobutton(
     variable=type_immobilier_value,
     value="Appartement"
 )
-type_immobilier_appartement_radio.grid(row=0, column=1, padx=10, pady=10)
+type_immobilier_appartement_radio.grid(row=0, column=1, padx=10, pady=10, sticky=tk.W)
 
 type_immobilier_maison_radio = tk.Radiobutton(
     ajout_bien_immobilier_window,
@@ -240,8 +248,6 @@ type_immobilier_maison_radio = tk.Radiobutton(
 )
 type_immobilier_maison_radio.grid(row=0, column=2, padx=10, pady=10)
 
-
-
 adresse_label = tk.Label(ajout_bien_immobilier_window, text="Adresse :")
 adresse_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
 adresse_entry = tk.Entry(ajout_bien_immobilier_window)
@@ -249,42 +255,68 @@ adresse_entry.grid(row=1, column=1, padx=10, pady=10)
 
 superficie_couvert_label = tk.Label(ajout_bien_immobilier_window, text="Superficie couverte (m²) :")
 superficie_couvert_label.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
-superficie_couvert_entry = tk.Entry(ajout_bien_immobilier_window)
+
+validate_func = ajout_bien_immobilier_window.register(validate_input)
+superficie_couvert_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
 superficie_couvert_entry.grid(row=2, column=1, padx=10, pady=10)
 
 superficie_jardin_label = tk.Label(ajout_bien_immobilier_window, text="Superficie jardin (m²) :")
 superficie_jardin_label.grid(row=3, column=0, padx=10, pady=10, sticky=tk.W)
-superficie_jardin_entry = tk.Entry(ajout_bien_immobilier_window)
+
+validate_func = ajout_bien_immobilier_window.register(validate_input)
+superficie_jardin_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
 superficie_jardin_entry.grid(row=3, column=1, padx=10, pady=10)
 
 nombre_pieces_label = tk.Label(ajout_bien_immobilier_window, text="Nombre de pièces :")
 nombre_pieces_label.grid(row=4, column=0, padx=10, pady=10, sticky=tk.W)
-nombre_pieces_entry = tk.Entry(ajout_bien_immobilier_window)
+
+validate_func = ajout_bien_immobilier_window.register(validate_input)
+nombre_pieces_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
 nombre_pieces_entry.grid(row=4, column=1, padx=10, pady=10)
 
 classe_energetique_label = tk.Label(ajout_bien_immobilier_window, text="Classe énergétique :")
 classe_energetique_label.grid(row=5, column=0, padx=10, pady=10, sticky=tk.W)
-classe_energetique_entry = tk.Entry(ajout_bien_immobilier_window)
-classe_energetique_entry.grid(row=5, column=1, padx=10, pady=10)
+
+classe_energetique_var = tk.StringVar(ajout_bien_immobilier_window)
+classe_energetique_choices = ["A", "B", "C", "D", "E", "F", "G"]
+classe_energetique_var.set(classe_energetique_choices[0])
+
+classe_energetique_dropdown = tk.OptionMenu(ajout_bien_immobilier_window, classe_energetique_var, *classe_energetique_choices)
+classe_energetique_dropdown.grid(row=5, column=1, padx=10, pady=10, sticky=tk.W)
 
 annee_construction_label = tk.Label(ajout_bien_immobilier_window, text="Année de construction :")
 annee_construction_label.grid(row=6, column=0, padx=10, pady=10, sticky=tk.W)
-annee_construction_entry = tk.Entry(ajout_bien_immobilier_window)
+
+validate_func = ajout_bien_immobilier_window.register(validate_input)
+annee_construction_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
 annee_construction_entry.grid(row=6, column=1, padx=10, pady=10)
 
+
+
+# Création de boutons radios pour la nature de gestion
 nature_gestion_label = tk.Label(ajout_bien_immobilier_window, text="Nature de la gestion :")
 nature_gestion_label.grid(row=7, column=0, padx=10, pady=10, sticky=tk.W)
-nature_gestion_entry = tk.Entry(ajout_bien_immobilier_window)
-nature_gestion_entry.grid(row=7, column=1, padx=10, pady=10)
 
-date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise en marche :")
-date_mise_marche_label.grid(row=8, column=0, padx=10, pady=10, sticky=tk.W)
-date_mise_marche_entry = tk.Entry(ajout_bien_immobilier_window)
-date_mise_marche_entry.grid(row=8, column=1, padx=10, pady=10)
+nature_gestion_value = tk.StringVar()
+nature_gestion_value.set("Location")  # Valeur par défaut sélectionnée
+
+location_radio = tk.Radiobutton(ajout_bien_immobilier_window, text="Location", variable=nature_gestion_value, value="Location")
+location_radio.grid(row=7, column=1, padx=10, pady=10, sticky=tk.W)
+
+vente_radio = tk.Radiobutton(ajout_bien_immobilier_window, text="Vente", variable=nature_gestion_value, value="Vente")
+vente_radio.grid(row=7, column=2, padx=10, pady=10, sticky=tk.W)
+
+#=====A METTRE AUTOMATIQUEMENT AVEC LOCAL.DATE EN SQL===#
+#date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise en marche :")
+#date_mise_marche_label.grid(row=8, column=0, padx=10, pady=10, sticky=tk.W)
+#date_mise_marche_entry = tk.Entry(ajout_bien_immobilier_window)
+#date_mise_marche_entry.grid(row=8, column=1, padx=10, pady=10)
 
 prix_label = tk.Label(ajout_bien_immobilier_window, text="Prix :")
 prix_label.grid(row=9, column=0, padx=10, pady=10, sticky=tk.W)
-prix_entry = tk.Entry(ajout_bien_immobilier_window)
+
+validate_func = ajout_bien_immobilier_window.register(validate_input)
+prix_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
 prix_entry.grid(row=9, column=1, padx=10, pady=10)
 
 
