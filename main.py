@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox
-# from PIL import ImageTk, Image
 import sqlite3
 import time
 import os
@@ -147,7 +146,6 @@ if not os.path.isfile(db_file):
     else:
         messagebox.showinfo("Fermeture de Pymmobilier", "Le programme va se fermer")
         exit()
-
 
 
 # Start the event loop
