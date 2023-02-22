@@ -193,35 +193,6 @@ if not os.path.isfile(db_file):
         messagebox.showinfo("Fermeture de Pymmobilier", "Le programme va se fermer")
         exit()
 
-#label_type = tk.Label(root, text="Type de bien")
-#label_type.grid(row=2, column=0)
-
-# Placement des étiquettes sur la fenêtre
-#type_bien_label.grid(row=0, column=0)
-#adresse_label.grid(row=1, column=0)
-#superficie_label.grid(row=2, column=0)
-#nombre_pieces_label.grid(row=3, column=0)
-#prix_label.grid(row=4, column=0)
-
-#Création des entrées pour chaque champ de formulaire
-#type_bien_entry = tk.Entry(root)
-#adresse_entry = tk.Entry(root)
-#superficie_entry = tk.Entry(root)
-#nombre_pieces_entry = tk.Entry(root)
-#prix_entry = tk.Entry(root)
-
-#Placement des entrées sur la fenêtre
-#type_bien_entry.grid(row=0, column=1)
-#adresse_entry.grid(row=1, column=1)
-#superficie_entry.grid(row=2, column=1)
-#nombre_pieces_entry.grid(row=3, column=1)
-#prix_entry.grid(row=4, column=1)
-
-#Création du bouton d'enregistrement
-#enregistrer_button = tk.Button(root, text="Enregistrer")
-
-#Placement du bouton sur la fenêtre
-#enregistrer_button.grid(row=5, column=1)
 
 # Création de la fenêtre d'ajout de bien immobilier
 ajout_bien_immobilier_window = tk.Toplevel()
@@ -290,8 +261,6 @@ annee_construction_label.grid(row=6, column=0, padx=10, pady=10, sticky=tk.W)
 validate_func = ajout_bien_immobilier_window.register(validate_input)
 annee_construction_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
 annee_construction_entry.grid(row=6, column=1, padx=10, pady=10)
-
-
 
 # Création de boutons radios pour la nature de gestion
 nature_gestion_label = tk.Label(ajout_bien_immobilier_window, text="Nature de la gestion :")
