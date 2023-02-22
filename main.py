@@ -10,7 +10,7 @@ import os
 #              FONCTIONS
 # ===================================
 # Chemin de la base de données
-db_file = "bien_immo.db"
+db_file = "bien_immo.sqlite"
 
 # ===================================
 #                SQL
@@ -148,40 +148,6 @@ if not os.path.isfile(db_file):
         messagebox.showinfo("Fermeture de Pymmobilier", "Le programme va se fermer")
         exit()
 
-
-
-
-
-# Créer deux frames pour les deux options
-left_frame = tk.Frame(root, width=width/2, height=height)
-right_frame = tk.Frame(root, width=width/2, height=height)
-left_frame.pack(side=tk.LEFT)
-right_frame.pack(side=tk.RIGHT)
-
-# Ajouter les images de fond
-#left_image = tk.PhotoImage(file="Assets/img/left_image.png").subsample(2)
-#right_image = tk.PhotoImage(file="Assets/img/right_image.png").subsample(2)
-#left_label = tk.Label(left_frame, image=left_image)
-#right_label = tk.Label(right_frame, image=right_image)
-#left_label.pack(fill=tk.BOTH, expand=True)
-#right_label.pack(fill=tk.BOTH, expand=True)
-
-# Ajouter les titres et descriptions
-left_title = tk.Label(left_frame, text="Recherche de biens", font=("Helvetica", 20))
-right_title = tk.Label(right_frame, text="Enregistrement de biens", font=("Helvetica", 20))
-left_title.pack(pady=(20, 10), anchor="center")
-right_title.pack(pady=(20, 10), anchor="center")
-
-left_description = tk.Label(left_frame, text="Rechercher des biens existants", font=("Helvetica", 12))
-right_description = tk.Label(right_frame, text="Enregistrer un nouveau bien", font=("Helvetica", 12))
-left_description.pack(pady=(10, 20), anchor="center")
-right_description.pack(pady=(10, 20), anchor="center")
-
-# Ajouter les boutons d'accès
-left_button = tk.Button(left_frame, text="Accéder", bg="white", fg="black", font=("Helvetica", 14))
-right_button = tk.Button(right_frame, text="Accéder", bg="white", fg="black", font=("Helvetica", 14))
-left_button.pack(pady=(10, 20), anchor="center")
-right_button.pack(pady=(10, 20), anchor="center")
 
 
 # Start the event loop
