@@ -147,6 +147,49 @@ if not os.path.isfile(db_file):
         messagebox.showinfo("Fermeture de Pymmobilier", "Le programme va se fermer")
         exit()
 
+label_type = tk.Label(root, text="Type de bien")
+label_type.grid(row=2, column=0)
+
+# Création des boutons radio
+type_var = tk.StringVar()
+type_var.set("Maison")
+radio1 = tk.Radiobutton(root, text="Maison", variable=type_var, value="Maison")
+radio2 = tk.Radiobutton(root, text="Appartement", variable=type_var, value="Appartement")
+radio1.grid(row=2, column=1)
+radio2.grid(row=2, column=2)
+type_bien_label = tk.Label(root, text="Type de bien")
+adresse_label = tk.Label(root, text="Adresse")
+superficie_label = tk.Label(root, text="Superficie (en m²)")
+nombre_pieces_label = tk.Label(root, text="Nombre de pièces")
+prix_label = tk.Label(root, text="Prix (en €)")
+
+# Placement des étiquettes sur la fenêtre
+type_bien_label.grid(row=0, column=0)
+
+adresse_label.grid(row=1, column=0)
+superficie_label.grid(row=2, column=0)
+nombre_pieces_label.grid(row=3, column=0)
+prix_label.grid(row=4, column=0)
+
+#Création des entrées pour chaque champ de formulaire
+type_bien_entry = tk.Entry(root)
+adresse_entry = tk.Entry(root)
+superficie_entry = tk.Entry(root)
+nombre_pieces_entry = tk.Entry(root)
+prix_entry = tk.Entry(root)
+
+#Placement des entrées sur la fenêtre
+type_bien_entry.grid(row=0, column=1)
+adresse_entry.grid(row=1, column=1)
+superficie_entry.grid(row=2, column=1)
+nombre_pieces_entry.grid(row=3, column=1)
+prix_entry.grid(row=4, column=1)
+
+#Création du bouton d'enregistrement
+enregistrer_button = tk.Button(root, text="Enregistrer")
+
+#Placement du bouton sur la fenêtre
+enregistrer_button.grid(row=5, column=1)
 
 # Start the event loop
 root.deiconify()
