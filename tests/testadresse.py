@@ -24,7 +24,7 @@ def create_database(db_file):
         nr_adresse TEXT,
         type_voie_adresse TEXT,
         nom_voie_adresse TEXT,
-        cp_adresse INTEGER
+        cp_adresse INTEGER,
         nom_ville_adresse TEXT,
         superficie_couvert REAL,
         superficie_jardin REAL,
@@ -62,10 +62,9 @@ def inserer_bien_immobilier(db_file, bien):
         classe_energetique,
         annee_construction,
         nature_gestion,
-        date_mise_marche,
         prix
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)
     """, (
         bien['type_immobilier'],
         bien['nr_adresse'],
@@ -79,7 +78,6 @@ def inserer_bien_immobilier(db_file, bien):
         bien['classe_energetique'],
         bien['annee_construction'],
         bien['nature_gestion'],
-        bien['date_mise_marche'],
         bien['prix']
     ))
 
@@ -88,6 +86,7 @@ def inserer_bien_immobilier(db_file, bien):
 
 def ouvrir_ajout_bien_immobilier():
     # Création de la fenêtre d'ajout de bien immobilier
+    global ajout_bien_immobilier_window
     ajout_bien_immobilier_window = tk.Toplevel(root)
     ajout_bien_immobilier_window.title("Ajouter un bien immobilier")
     ajout_bien_immobilier_window.geometry("500x500")
@@ -96,6 +95,8 @@ def ouvrir_ajout_bien_immobilier():
     # Création des boutons radio pour le type d'immobilier
     type_immobilier_label = tk.Label(ajout_bien_immobilier_window, text="Type d'immobilier :")
     type_immobilier_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
+
+    global type_immobilier_value
 
     type_immobilier_value = tk.StringVar(value="Appartement")
     type_immobilier_appartement_radio = tk.Radiobutton(
@@ -116,10 +117,11 @@ def ouvrir_ajout_bien_immobilier():
 
     adresse_label = tk.Label(ajout_bien_immobilier_window, text="Adresse :")
     adresse_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
+    global adresse_nr_entry
     adresse_nr_entry = tk.Entry(ajout_bien_immobilier_window, width=5)
     adresse_nr_entry.place(x=170, y=55)
     
-
+    global adresse_type_voie_var
     adresse_type_voie_var = tk.StringVar(ajout_bien_immobilier_window)
     addresse_type_voie_choices = ["Rue", "Allee", "Boulevard", "Chemin"]
     adresse_type_voie_var.set(addresse_type_voie_choices[0])
@@ -127,39 +129,42 @@ def ouvrir_ajout_bien_immobilier():
     adresse_type_voie_dropdown = tk.OptionMenu(ajout_bien_immobilier_window, adresse_type_voie_var, *addresse_type_voie_choices)
     adresse_type_voie_dropdown.place(x=202, y=47)
     
+    global adresse_nomvoie_entry
     adresse_nomvoie_entry = tk.Entry(ajout_bien_immobilier_window, width=8)
     adresse_nomvoie_entry.place(x=262, y=55)
 
+    global cp_adresse_entry
     cp_adresse_entry = tk.Entry(ajout_bien_immobilier_window, width=6)
     cp_adresse_entry.place(x=280, y=55)
 
+    global nom_ville_adresse_entry
     nom_ville_adresse_entry = tk.Entry(ajout_bien_immobilier_window,width= 8)
     nom_ville_adresse_entry.place(x=302, y=55)
 
     superficie_couvert_label = tk.Label(ajout_bien_immobilier_window, text="Superficie couverte (m²) :")
     superficie_couvert_label.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
-
+    global superficie_couvert_entry
     validate_func = ajout_bien_immobilier_window.register(validate_input)
     superficie_couvert_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     superficie_couvert_entry.grid(row=2, column=1, padx=10, pady=10)
 
     superficie_jardin_label = tk.Label(ajout_bien_immobilier_window, text="Superficie jardin (m²) :")
     superficie_jardin_label.grid(row=3, column=0, padx=10, pady=10, sticky=tk.W)
-
+    global superficie_jardin_entry
     validate_func = ajout_bien_immobilier_window.register(validate_input)
     superficie_jardin_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     superficie_jardin_entry.grid(row=3, column=1, padx=10, pady=10)
 
     nombre_pieces_label = tk.Label(ajout_bien_immobilier_window, text="Nombre de pièces :")
     nombre_pieces_label.grid(row=4, column=0, padx=10, pady=10, sticky=tk.W)
-
+    global nombre_pieces_entry
     validate_func = ajout_bien_immobilier_window.register(validate_input)
     nombre_pieces_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     nombre_pieces_entry.grid(row=4, column=1, padx=10, pady=10)
 
     classe_energetique_label = tk.Label(ajout_bien_immobilier_window, text="Classe énergétique :")
     classe_energetique_label.grid(row=5, column=0, padx=10, pady=10, sticky=tk.W)
-
+    global classe_energetique_var
     classe_energetique_var = tk.StringVar(ajout_bien_immobilier_window)
     classe_energetique_choices = ["A", "B", "C", "D", "E", "F", "G"]
     classe_energetique_var.set(classe_energetique_choices[0])
@@ -169,7 +174,7 @@ def ouvrir_ajout_bien_immobilier():
 
     annee_construction_label = tk.Label(ajout_bien_immobilier_window, text="Année de construction :")
     annee_construction_label.grid(row=6, column=0, padx=10, pady=10, sticky=tk.W)
-
+    global annee_construction_entry
     validate_func = ajout_bien_immobilier_window.register(validate_input)
     annee_construction_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     annee_construction_entry.grid(row=6, column=1, padx=10, pady=10)
@@ -177,7 +182,7 @@ def ouvrir_ajout_bien_immobilier():
     # Création de boutons radios pour la nature de gestion
     nature_gestion_label = tk.Label(ajout_bien_immobilier_window, text="Nature de la gestion :")
     nature_gestion_label.grid(row=7, column=0, padx=10, pady=10, sticky=tk.W)
-
+    global nature_gestion_value
     nature_gestion_value = tk.StringVar()
     nature_gestion_value.set("Location")  # Valeur par défaut sélectionnée
 
@@ -195,7 +200,7 @@ def ouvrir_ajout_bien_immobilier():
 
     prix_label = tk.Label(ajout_bien_immobilier_window, text="Prix :")
     prix_label.grid(row=9, column=0, padx=10, pady=10, sticky=tk.W)
-
+    global prix_entry
     validate_func = ajout_bien_immobilier_window.register(validate_input)
     prix_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     prix_entry.grid(row=9, column=1, padx=10, pady=10)
