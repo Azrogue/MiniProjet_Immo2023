@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import sqlite3
 import time
+from datetime import date
 import os
 
 
@@ -168,8 +169,11 @@ def ouvrir_ajout_bien_immobilier():
     vente_radio.grid(row=7, column=2, padx=10, pady=10, sticky=tk.W)
 
     #=====A METTRE AUTOMATIQUEMENT AVEC LOCAL.DATE EN SQL===#
-    #date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise en marche :")
-    #date_mise_marche_label.grid(row=8, column=0, padx=10, pady=10, sticky=tk.W)
+    date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise en marche :")
+    date_mise_marche_label.grid(row=8, column=0, padx=10, pady=10, sticky=tk.W)
+    # Créer un label pour la date courante
+    today_label = tk.Label(ajout_bien_immobilier_window, text=date.today().strftime("%d/%m/%Y"))
+    today_label.grid(row=8, column=1, padx=10, pady=10, sticky=tk.E)
     #date_mise_marche_entry = tk.Entry(ajout_bien_immobilier_window)
     #date_mise_marche_entry.grid(row=8, column=1, padx=10, pady=10)
 
@@ -184,8 +188,6 @@ def ouvrir_ajout_bien_immobilier():
     # Création du bouton de validation
     valider_button = tk.Button(ajout_bien_immobilier_window, text="Valider", command=valider_saisie)
     valider_button.grid(row=10, column=0, padx=10, pady=10)
-    #Fenêtre Ajout bien immobilier
-    #==================FIN======================
 
 
 #def recuperation_infos_bien(db_file):
@@ -207,7 +209,7 @@ def validate_input(new_value):
         return True
 
     try:
-        int(new_value)
+        float(new_value)
         return True
     except ValueError:
         return False
