@@ -95,6 +95,7 @@ def valider_saisie():
     """Récupère les valeurs saisies et les ajoute à la base de données"""
 
     # Récupération des valeurs saisies dans les champs de saisie
+    search_data = search_entry.get()
     type_immobilier = type_immobilier_value.get()
     adresse = adresse_entry.get()
     superficie_couvert = superficie_couvert_entry.get()
@@ -125,6 +126,21 @@ def valider_saisie():
 
     # Fermeture de la fenêtre d'ajout de bien immobilier
     ajout_bien_immobilier_window.destroy()
+
+def update_results():
+    # Effacer les anciens résultats
+    conn = sqlite3.connect("bien_immo.sqlite")
+    cur = conn.cursor()
+    results_listbox.delete(0, tk.END)
+
+    # Requête SQL pour récupérer les objets qui correspondent à la recherche
+    search_term = search_var.get()
+    cur.execute("SELECT * FROM objets WHERE nom LIKE ?", ('%' + search_term + '%',))
+    results = cur.fetchall()
+
+    # Ajouter les résultats à la liste
+    for row in results:
+        results_listbox.insert(tk.END, row[1])
 
 
 def centerWindow(width, height, root):  # Return 4 values needed to center Window
@@ -198,6 +214,10 @@ enregistrer_button.grid(row=5, column=1)
 ajout_bien_immobilier_window = tk.Toplevel()
 ajout_bien_immobilier_window.title("Ajouter un bien immobilier")
 
+
+
+results_listbox = tk.Listbox(root)
+results_listbox.grid()
 # Création des boutons radio pour le type d'immobilier
 type_immobilier_label = tk.Label(ajout_bien_immobilier_window, text="Type d'immobilier :")
 type_immobilier_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
@@ -218,8 +238,6 @@ type_immobilier_maison_radio = tk.Radiobutton(
     value="Maison"
 )
 type_immobilier_maison_radio.grid(row=0, column=2, padx=10, pady=10)
-
-
 
 adresse_label = tk.Label(ajout_bien_immobilier_window, text="Adresse :")
 adresse_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
