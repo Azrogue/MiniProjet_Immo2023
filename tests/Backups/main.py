@@ -220,6 +220,8 @@ type_immobilier_maison_radio.grid(row=0, column=2, padx=10, pady=10)
 
 adresse_label = tk.Label(ajout_bien_immobilier_window, text="Adresse :")
 adresse_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
+adresse_nr_entry = tk.Entry(ajout_bien_immobilier_window)
+adresse_nr_entry.grid(row=1, column=1, padx=10, pady=10)
 adresse_entry = tk.Entry(ajout_bien_immobilier_window)
 adresse_entry.grid(row=1, column=1, padx=10, pady=10)
 

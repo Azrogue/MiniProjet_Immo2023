@@ -21,7 +21,11 @@ def create_database(db_file):
     CREATE TABLE IF NOT EXISTS biens_immobiliers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         type_immobilier TEXT,
-        adresse TEXT,
+        nr_adresse TEXT,
+        type_voie_adresse TEXT,
+        nom_voie_adresse TEXT,
+        cp_adresse INTEGER
+        nom_ville_adresse TEXT,
         superficie_couvert REAL,
         superficie_jardin REAL,
         nombre_pieces INTEGER,
@@ -29,7 +33,8 @@ def create_database(db_file):
         annee_construction INTEGER,
         nature_gestion TEXT,
         date_mise_marche TEXT,
-        prix REAL
+        prix REAL,
+        timestamp DATE DEFAULT (datetime('now','localtime'))
     )
     """)
 
@@ -46,7 +51,11 @@ def inserer_bien_immobilier(db_file, bien):
     cursor.execute("""
     INSERT INTO biens_immobiliers (
         type_immobilier,
-        adresse,
+        nr_adresse,
+        type_voie_adresse,
+        nom_voie_adresse,
+        cp_adresse,
+        nom_ville_adresse,
         superficie_couvert,
         superficie_jardin,
         nombre_pieces,
@@ -56,10 +65,14 @@ def inserer_bien_immobilier(db_file, bien):
         date_mise_marche,
         prix
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)
     """, (
         bien['type_immobilier'],
-        bien['adresse'],
+        bien['nr_adresse'],
+        bien['type_voie_adresse'],
+        bien['nom_voie_adresse'],
+        bien['cp_adresse'],
+        bien['nom_ville_adresse'],
         bien['superficie_couvert'],
         bien['superficie_jardin'],
         bien['nombre_pieces'],
@@ -103,10 +116,26 @@ def ouvrir_ajout_bien_immobilier():
 
     adresse_label = tk.Label(ajout_bien_immobilier_window, text="Adresse :")
     adresse_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
-    adresse_entry = tk.Entry(ajout_bien_immobilier_window)
-    adresse_entry.grid(row=1, column=1, padx=10, pady=10)
-
+    adresse_nr_entry = tk.Entry(ajout_bien_immobilier_window, width=5)
+    adresse_nr_entry.place(x=170, y=55)
     
+
+    adresse_type_voie_var = tk.StringVar(ajout_bien_immobilier_window)
+    addresse_type_voie_choices = ["Rue", "Allee", "Boulevard", "Chemin"]
+    adresse_type_voie_var.set(addresse_type_voie_choices[0])
+
+    adresse_type_voie_dropdown = tk.OptionMenu(ajout_bien_immobilier_window, adresse_type_voie_var, *addresse_type_voie_choices)
+    adresse_type_voie_dropdown.place(x=202, y=47)
+    
+    adresse_nomvoie_entry = tk.Entry(ajout_bien_immobilier_window, width=8)
+    adresse_nomvoie_entry.place(x=262, y=55)
+
+    cp_adresse_entry = tk.Entry(ajout_bien_immobilier_window, width=6)
+    cp_adresse_entry.place(x=280, y=55)
+
+    nom_ville_adresse_entry = tk.Entry(ajout_bien_immobilier_window,width= 8)
+    nom_ville_adresse_entry.place(x=302, y=55)
+
     superficie_couvert_label = tk.Label(ajout_bien_immobilier_window, text="Superficie couverte (m²) :")
     superficie_couvert_label.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
 
@@ -207,7 +236,11 @@ def valider_saisie():
 
     # Récupération des valeurs saisies dans les champs de saisie
     type_immobilier = type_immobilier_value.get()
-    adresse = adresse_entry.get()
+    nom_voie_adresse = adresse_nomvoie_entry.get()
+    cp_adresse = cp_adresse_entry.get()
+    type_voie_adresse = adresse_type_voie_var.get()
+    nr_adresse = adresse_nr_entry.get()
+    nom_ville_adresse = nom_ville_adresse_entry.get()
     superficie_couvert = superficie_couvert_entry.get()
     superficie_jardin = superficie_jardin_entry.get()
     nombre_pieces = nombre_pieces_entry.get()
@@ -220,7 +253,11 @@ def valider_saisie():
     # Création d'un dictionnaire avec les valeurs saisies
     bien = {
         'type_immobilier': type_immobilier,
-        'adresse': adresse,
+        'nr_adresse' : nr_adresse,
+        'type_voie_adresse' : type_voie_adresse,
+        'nom_voie_adresse' : nom_voie_adresse,
+        'cp_adresse' : cp_adresse,
+        'nom_ville_adresse' : nom_ville_adresse,
         'superficie_couvert': superficie_couvert,
         'superficie_jardin': superficie_jardin,
         'nombre_pieces': nombre_pieces,
