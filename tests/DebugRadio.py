@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from tkinter import messagebox
 import sqlite3
 import time
@@ -54,10 +53,9 @@ def inserer_bien_immobilier(db_file, bien):
         classe_energetique,
         annee_construction,
         nature_gestion,
-        date_mise_marche,
         prix
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         bien['type_immobilier'],
         bien['adresse'],
@@ -67,25 +65,30 @@ def inserer_bien_immobilier(db_file, bien):
         bien['classe_energetique'],
         bien['annee_construction'],
         bien['nature_gestion'],
-        bien['date_mise_marche'],
+        #bien['date_mise_marche'],
         bien['prix']
     ))
 
     conn.commit()
     conn.close()
 
+
+
 def ouvrir_ajout_bien_immobilier():
+
     # Création de la fenêtre d'ajout de bien immobilier
+    global ajout_bien_immobilier_window
     ajout_bien_immobilier_window = tk.Toplevel(root)
     ajout_bien_immobilier_window.title("Ajouter un bien immobilier")
     ajout_bien_immobilier_window.geometry("500x500")
 
+    global type_immobilier_value
+    type_immobilier_value = tk.StringVar(value="Appartement")
 
     # Création des boutons radio pour le type d'immobilier
     type_immobilier_label = tk.Label(ajout_bien_immobilier_window, text="Type d'immobilier :")
     type_immobilier_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
 
-    type_immobilier_value = tk.StringVar(value="Appartement")
     type_immobilier_appartement_radio = tk.Radiobutton(
         ajout_bien_immobilier_window,
         text="Appartement",
@@ -104,6 +107,7 @@ def ouvrir_ajout_bien_immobilier():
 
     adresse_label = tk.Label(ajout_bien_immobilier_window, text="Adresse :")
     adresse_label.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
+    global adresse_entry
     adresse_entry = tk.Entry(ajout_bien_immobilier_window)
     adresse_entry.grid(row=1, column=1, padx=10, pady=10)
 
@@ -111,6 +115,7 @@ def ouvrir_ajout_bien_immobilier():
     superficie_couvert_label.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
 
     validate_func = ajout_bien_immobilier_window.register(validate_input)
+    global superficie_couvert_entry
     superficie_couvert_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     superficie_couvert_entry.grid(row=2, column=1, padx=10, pady=10)
 
@@ -118,6 +123,7 @@ def ouvrir_ajout_bien_immobilier():
     superficie_jardin_label.grid(row=3, column=0, padx=10, pady=10, sticky=tk.W)
 
     validate_func = ajout_bien_immobilier_window.register(validate_input)
+    global superficie_jardin_entry
     superficie_jardin_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     superficie_jardin_entry.grid(row=3, column=1, padx=10, pady=10)
 
@@ -125,12 +131,13 @@ def ouvrir_ajout_bien_immobilier():
     nombre_pieces_label.grid(row=4, column=0, padx=10, pady=10, sticky=tk.W)
 
     validate_func = ajout_bien_immobilier_window.register(validate_input)
+    global nombre_pieces_entry
     nombre_pieces_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     nombre_pieces_entry.grid(row=4, column=1, padx=10, pady=10)
 
     classe_energetique_label = tk.Label(ajout_bien_immobilier_window, text="Classe énergétique :")
     classe_energetique_label.grid(row=5, column=0, padx=10, pady=10, sticky=tk.W)
-
+    global classe_energetique_var
     classe_energetique_var = tk.StringVar(ajout_bien_immobilier_window)
     classe_energetique_choices = ["A", "B", "C", "D", "E", "F", "G"]
     classe_energetique_var.set(classe_energetique_choices[0])
@@ -142,6 +149,7 @@ def ouvrir_ajout_bien_immobilier():
     annee_construction_label.grid(row=6, column=0, padx=10, pady=10, sticky=tk.W)
 
     validate_func = ajout_bien_immobilier_window.register(validate_input)
+    global annee_construction_entry
     annee_construction_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     annee_construction_entry.grid(row=6, column=1, padx=10, pady=10)
 
@@ -149,6 +157,7 @@ def ouvrir_ajout_bien_immobilier():
     nature_gestion_label = tk.Label(ajout_bien_immobilier_window, text="Nature de la gestion :")
     nature_gestion_label.grid(row=7, column=0, padx=10, pady=10, sticky=tk.W)
 
+    global nature_gestion_value
     nature_gestion_value = tk.StringVar()
     nature_gestion_value.set("Location")  # Valeur par défaut sélectionnée
 
@@ -168,6 +177,7 @@ def ouvrir_ajout_bien_immobilier():
     prix_label.grid(row=9, column=0, padx=10, pady=10, sticky=tk.W)
 
     validate_func = ajout_bien_immobilier_window.register(validate_input)
+    global prix_entry
     prix_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     prix_entry.grid(row=9, column=1, padx=10, pady=10)
 
@@ -236,6 +246,7 @@ def valider_saisie():
 
     # Fermeture de la fenêtre d'ajout de bien immobilier
     ajout_bien_immobilier_window.destroy()
+    print("test")
 
 
 def centerWindow(width, height, root):  # Return 4 values needed to center Window
@@ -246,13 +257,15 @@ def centerWindow(width, height, root):  # Return 4 values needed to center Windo
     return int(x), int(y)
 
 
-
 # ===================================
 #              EXECUTION
 # ===================================
 # Créer une fenêtre principale
 root = tk.Tk()
 root.withdraw()
+
+#Variables globales :
+
 
 # Titre de la fenêtre
 root.title("Gestion Immobilière")
@@ -267,6 +280,7 @@ image = tk.PhotoImage(file="Assets/img/splash.png")
 label = tk.Label(splash_screen, image = image)
 label.pack()
 splash_screen.update()
+
 
 # Obtenir la taille de l'écran
 screen_width = root.winfo_screenwidth()
@@ -297,36 +311,6 @@ if not os.path.isfile(db_file):
     else:
         messagebox.showinfo("Fermeture de Pymmobilier", "Le programme va se fermer")
         exit()
-from tkinter import *
-from tkinter import ttk
-import sqlite3
-
-# Connexion à la base de données
-conn = sqlite3.connect(db_file)
-cursor = conn.cursor()
-
-# Création du tableau
-tableau_bien_immobilier = ttk.Treeview(root, columns=("adresse", "type_immobilier", "prix", "superficie_couvert", "classe_energetique"), show="headings", height=15)
-tableau_bien_immobilier.pack()
-
-# Ajout des en-têtes de colonnes
-tableau_bien_immobilier.heading("adresse", text="Adresse")
-tableau_bien_immobilier.heading("type_immobilier", text="Type de bien")
-tableau_bien_immobilier.heading("prix", text="Prix")
-tableau_bien_immobilier.heading("superficie_couvert", text="Surface couverte")
-tableau_bien_immobilier.heading("classe_energetique", text="Classe énergétique")
-
-# Récupération des données dans la base de données
-cursor.execute("SELECT adresse, type_immobilier, prix, superficie_couvert, classe_energetique FROM biens_immobiliers")
-resultats = cursor.fetchall()
-
-# Affichage des données dans le tableau
-for resultat in resultats:
-    tableau_bien_immobilier.insert("", "end", values=resultat)
-
-# Fermeture de la base de données
-cursor.close()
-conn.close()
 
 ajouter_bien_button = tk.Button(root, text="Ajouter un bien immobilier", command=ouvrir_ajout_bien_immobilier)
 ajouter_bien_button.grid(row=0, column=0, padx=10, pady=10)
