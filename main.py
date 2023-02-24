@@ -273,7 +273,7 @@ def valider_saisie():
     nature_gestion = nature_gestion_value.get()
     #date_mise_marche = date_mise_marche_entry.get()
     prix = prix_entry.get()
-
+ 
     # Création d'un dictionnaire avec les valeurs saisies
     bien = {
         'type_immobilier': type_immobilier,
