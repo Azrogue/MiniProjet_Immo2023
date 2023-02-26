@@ -348,7 +348,6 @@ def valider_saisie():
     # Fermeture de la fenêtre d'ajout de bien immobilier
     ajout_bien_immobilier_window.destroy()
     actualiser_tableau()
-    print("test")
 
 
 def centerWindow(width, height, root):  # Return 4 values needed to center Window
@@ -357,6 +356,79 @@ def centerWindow(width, height, root):  # Return 4 values needed to center Windo
     x = (screen_width/2) - (width/2)
     y = (screen_height/2) - (height/2)
     return int(x), int(y)
+
+def ouvrir_suppression_bien_immobilier():
+    suppression_bien_window = tk.Toplevel(root)
+    suppression_bien_window.title("Suppression de bien immobilier")
+
+    # Créer une boîte de liste pour afficher les biens immobiliers existants
+    id_list = tk.Listbox(suppression_bien_window)
+    id_list.pack(fill=tk.BOTH, expand=1)
+
+    # Ajouter un bouton "Sélectionner tout"
+    select_all_button = tk.Button(suppression_bien_window, text="Sélectionner tout", command=lambda: id_list.select_set(0, tk.END))
+    select_all_button.pack(side=tk.LEFT)
+
+    # Ajouter un bouton "Désélectionner tout"
+    deselect_all_button = tk.Button(suppression_bien_window, text="Désélectionner tout", command=lambda: id_list.selection_clear(0, tk.END))
+    deselect_all_button.pack(side=tk.LEFT)
+
+    # Ajouter un bouton "Supprimer"
+    delete_button = tk.Button(suppression_bien_window, text="Supprimer", command=lambda: supprimer_biens_selectionnes(id_list.curselection()))
+    delete_button.pack(side=tk.RIGHT)
+
+    # Récupérer les données de la table biens_immobiliers
+    data = recup_data_in_db()
+
+    # Mettre à jour la liste des biens immobiliers dans la Listbox
+    id_list.delete(0, tk.END)
+    for bien in data:
+        id_list.insert(tk.END, (bien[0], bien[4], bien[6]))
+
+def supprimer_biens_selectionnes(selection):
+    if not selection:
+        messagebox.showwarning("Aucune sélection", "Veuillez sélectionner au moins un bien immobilier à supprimer.")
+        return
+
+    confirmation = messagebox.askyesno("Confirmation de suppression", "Êtes-vous sûr de vouloir supprimer les biens immobiliers sélectionnés ?")
+    if not confirmation:
+        return
+    
+    # Connexion à la base de données
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+
+    # Récupérer les données de la table biens_immobiliers
+    cursor.execute("SELECT * FROM biens_immobiliers")
+    data = cursor.fetchall()
+
+    # Supprimer les biens sélectionnés de la table biens_immobiliers
+    for index in selection[::-1]:
+        id_bien = data[index][0]
+        cursor.execute("DELETE FROM biens_immobiliers WHERE ID=?", (id_bien,))
+        conn.commit()
+
+    # Fermer la connexion à la base de données
+    cursor.close()
+    conn.close()
+
+    # Mettre à jour la liste des biens immobiliers dans la Listbox
+    suppression_bien_window = tk.Toplevel(root)
+    suppression_bien_window.title("Suppression de biens immobiliers")
+
+    id_list = tk.Listbox(suppression_bien_window, width=30)
+    id_list.grid(row=0, column=0, padx=10, pady=10)
+
+    for bien in data:
+        id_list.insert(tk.END, (bien[0], bien[4], bien[6]))
+
+    # Afficher un message de confirmation
+    messagebox.showinfo("Suppression réussie", "Les biens immobiliers sélectionnés ont été supprimés avec succès.")
+
+    # Fermer la fenêtre
+    suppression_bien_window.destroy()
+    actualiser_tableau()
+
 
 
 # ===================================
@@ -420,9 +492,13 @@ if not os.path.isfile(db_file):
 bouton_cadre = tk.Frame(root)
 bouton_cadre.pack(side=tk.TOP, anchor=tk.NE)
 
-# Ajouter le bouton dans le cadre
+# Bouton pour ajouter un bien immobilier
 ajouter_bien_button = tk.Button(bouton_cadre, text="Ajouter un bien immobilier", command=ouvrir_ajout_bien_immobilier)
 ajouter_bien_button.pack(side=tk.RIGHT)
+
+# Bouton pour supprimer un bien immobilier
+supprimer_bien_button = tk.Button(bouton_cadre, text="Suppression de biens", command=ouvrir_suppression_bien_immobilier)
+supprimer_bien_button.pack(side=tk.RIGHT)
 
 tableau_infos_bien()
 
