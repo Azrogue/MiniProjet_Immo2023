@@ -312,6 +312,9 @@ def update_table():
     maison_value = maison_var.get()
     prix_min_value = prix_min_entry.get()
     prix_max_value = prix_max_entry.get()
+    superficie_min_value = superficie_min_entry.get()
+    superficie_max_value = superficie_max_entry.get()
+
 
     # Filtrer les données de la base de données en fonction des choix de l'utilisateur
     filtered_data = []
@@ -332,6 +335,10 @@ def update_table():
         if prix_min_value and int(row[14]) < int(prix_min_value):
             continue
         if prix_max_value and int(row[14]) > int(prix_max_value):
+            continue
+        if superficie_min_value and int(row[7]) < int(superficie_min_value):
+            continue
+        if superficie_max_value and int(row[7]) > int(superficie_max_value):
             continue
         filtered_data.append(row)
 
@@ -595,10 +602,7 @@ maison_checkbox.pack()
 
 filters_frame_right = ttk.Frame(root)
 filters_frame_right.pack()
-ville_label = tk.Label(filters_frame, text="Ville:")
-ville_label.pack()
-ville_entry = tk.Entry(filters_frame)
-ville_entry.pack()
+
 prix_min_label = tk.Label(filters_frame_right, text="Prix min:")
 prix_min_label.pack()
 prix_min_entry = tk.Entry(filters_frame_right)
@@ -607,6 +611,14 @@ prix_max_label = tk.Label(filters_frame_right, text="Prix max:")
 prix_max_label.pack()
 prix_max_entry = tk.Entry(filters_frame_right)
 prix_max_entry.pack()
+superficie_min_label = tk.Label(filters_frame_right, text="superficie min:")
+superficie_min_label.pack()
+superficie_min_entry = tk.Entry(filters_frame_right)
+superficie_min_entry.pack()
+superficie_max_label = tk.Label(filters_frame_right, text="superficie max:")
+superficie_max_label.pack()
+superficie_max_entry = tk.Entry(filters_frame_right)
+superficie_max_entry.pack()
 
 annee_construction_entry.bind("<KeyRelease>", lambda event: update_table())
 vente_checkbox.config(command=update_table)
@@ -615,7 +627,8 @@ appartement_checkbox.config(command=update_table)
 maison_checkbox.config(command=update_table)
 prix_max_entry.bind("<KeyRelease>", lambda event: update_table())
 prix_min_entry.bind("<KeyRelease>", lambda event: update_table())
-
+superficie_min_entry.bind("<KeyRelease>", lambda event: update_table())
+superficie_min_entry.bind("<KeyRelease>", lambda event: update_table())
 
 
 ville_entry.bind("<KeyRelease>", lambda event: update_table())
@@ -625,6 +638,8 @@ maison_checkbox.config(command=update_table)
 appartement_checkbox.config(command=update_table)
 prix_min_entry.bind("<KeyRelease>", lambda event: update_table())
 prix_max_entry.bind("<KeyRelease>", lambda event: update_table())
+superficie_min_entry.bind("<KeyRelease>", lambda event: update_table())
+superficie_max_entry.bind("<KeyRelease>", lambda event: update_table())
 
 
 
