@@ -1,5 +1,7 @@
 import tkinter as tk
+from tkinter import *
 import tkinter.ttk as ttk
+from tkcalendar import *
 from tkinter import messagebox
 import sqlite3
 import time
@@ -64,9 +66,10 @@ def inserer_bien_immobilier(db_file, bien):
         classe_energetique,
         annee_construction,
         nature_gestion,
+        date_mise_marche TEXT,
         prix
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)
     """, (
         bien['type_immobilier'],
         bien['nr_adresse'],
@@ -80,6 +83,7 @@ def inserer_bien_immobilier(db_file, bien):
         bien['classe_energetique'],
         bien['annee_construction'],
         bien['nature_gestion'],
+        bien['date_mise_marche'],
         bien['prix']
     ))
 
@@ -95,8 +99,8 @@ def ouvrir_ajout_bien_immobilier():
     global ajout_bien_immobilier_window
     ajout_bien_immobilier_window = tk.Toplevel(root)
     ajout_bien_immobilier_window.title("Ajouter un bien immobilier")
-    ajout_bien_immobilier_window.geometry("600x500")
-
+    ajout_bien_immobilier_window.geometry("600x550")
+    validate_func = ajout_bien_immobilier_window.register(validate_input)
     global type_immobilier_value
     type_immobilier_value = tk.StringVar(value="Appartement")
 
@@ -148,7 +152,7 @@ def ouvrir_ajout_bien_immobilier():
     cp_adresse_label = tk.Label(ajout_bien_immobilier_window, text="Code postale:")
     cp_adresse_label.grid(row=2, column=1, padx=10, pady=10, sticky=tk.W)
     global cp_adresse_entry
-    cp_adresse_entry = tk.Entry(ajout_bien_immobilier_window, width=7)
+    cp_adresse_entry = tk.Entry(ajout_bien_immobilier_window, width=7,validate="key", validatecommand=(validate_func, "%P"))
     cp_adresse_entry.place(x=250, y=97)
 
     nom_ville_adresse_label = tk.Label(ajout_bien_immobilier_window, text="Ville :")
@@ -159,7 +163,7 @@ def ouvrir_ajout_bien_immobilier():
     superficie_couvert_label = tk.Label(ajout_bien_immobilier_window, text="Superficie couverte (m²) :")
     superficie_couvert_label.grid(row=3, column=0, padx=10, pady=10, sticky=tk.W)
 
-    validate_func = ajout_bien_immobilier_window.register(validate_input)
+    
     global superficie_couvert_entry
     superficie_couvert_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
     superficie_couvert_entry.grid(row=3, column=1, padx=10, pady=10)
@@ -212,26 +216,30 @@ def ouvrir_ajout_bien_immobilier():
     vente_radio = tk.Radiobutton(ajout_bien_immobilier_window, text="Vente", variable=nature_gestion_value, value="Vente")
     vente_radio.grid(row=8, column=2, padx=10, pady=10, sticky=tk.W)
 
-    #=====A METTRE AUTOMATIQUEMENT AVEC LOCAL.DATE EN SQL===#
-    date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise en marche :")
+    date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise sur le marché :")
     date_mise_marche_label.grid(row=9, column=0, padx=10, pady=10, sticky=tk.W)
+    date_mise_marche_entry = DateEntry(ajout_bien_immobilier_window, date_pattern='dd/MM/yyyy')
+    date_mise_marche_entry.grid(row=9, column=1, padx=10, pady=10, sticky=tk.W)
+
+    #=====A METTRE AUTOMATIQUEMENT AVEC LOCAL.DATE EN SQL===#
+    #date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise en marche :")
+    #date_mise_marche_label.grid(row=10, column=0, padx=10, pady=10, sticky=tk.W)
     # Créer un label pour la date courante
-    today_label = tk.Label(ajout_bien_immobilier_window, text=date.today().strftime("%d/%m/%Y"))
-    today_label.grid(row=9, column=1, padx=10, pady=10, sticky=tk.E)
-    #date_mise_marche_entry = tk.Entry(ajout_bien_immobilier_window)
-    #date_mise_marche_entry.grid(row=8, column=1, padx=10, pady=10)
+    #today_label = tk.Label(ajout_bien_immobilier_window, text=date.today().strftime("%d/%m/%Y"))
+    #today_label.grid(row=10, column=1, padx=10, pady=10, sticky=tk.E)
+    
 
     prix_label = tk.Label(ajout_bien_immobilier_window, text="Prix :")
-    prix_label.grid(row=10, column=0, padx=10, pady=10, sticky=tk.W)
+    prix_label.grid(row=11, column=0, padx=10, pady=10, sticky=tk.W)
 
     validate_func = ajout_bien_immobilier_window.register(validate_input)
     global prix_entry
     prix_entry = tk.Entry(ajout_bien_immobilier_window, validate="key", validatecommand=(validate_func, "%P"))
-    prix_entry.grid(row=10, column=1, padx=10, pady=10)
+    prix_entry.grid(row=11, column=1, padx=10, pady=10)
 
     # Création du bouton de validation
     valider_button = tk.Button(ajout_bien_immobilier_window, text="Valider", command=valider_saisie)
-    valider_button.grid(row=11, column=0, padx=10, pady=10)
+    valider_button.grid(row=12, column=0, padx=10, pady=10)
 
 def recup_data_in_db():
     # Connexion à la base de données
@@ -297,14 +305,14 @@ def update_table():
     table.delete(*table.get_children())
 
     # Récupérer les valeurs des champs de saisie et des cases à cocher
-    cp_value = cp_entry.get()
+    annee_construction_value = annee_construction_entry.get()
     vente_value = vente_var.get()
     location_value = location_var.get()
     ville_value = ville_entry.get()
     appartement_value = appartement_var.get()
     maison_value = maison_var.get()
-    prix_min_value = prix_min.get()
-    prix_max_value = prix_max.get()
+    prix_min_value = prix_min_entry.get()
+    prix_max_value = prix_max_entry.get()
 
     # Filtrer les données de la base de données en fonction des choix de l'utilisateur
     filtered_data = []
@@ -312,7 +320,7 @@ def update_table():
     for row in data:
         if ville_value and ville_value not in str(row[6]):
             continue
-        if cp_value and cp_value not in str(row[5]):
+        if annee_construction_value and annee_construction_value not in str(row[11]):
             continue
         if vente_value and row[12] != "Vente":
             continue
@@ -322,8 +330,9 @@ def update_table():
             continue
         if maison_value and row[1] != "Maison":
             continue
-        if row[13] < prix_min_value or row[13] > prix_max_value:
-            continue
+        """if int(row[14]) < int(prix_max_value) or int(row[14]) > int(prix_min_value):
+            continue"""
+        
         filtered_data.append(row)
 
     # Insérer les données filtrées dans le Treeview
@@ -371,7 +380,7 @@ def valider_saisie():
     classe_energetique = classe_energetique_var.get()
     annee_construction = annee_construction_entry.get()
     nature_gestion = nature_gestion_value.get()
-    #date_mise_marche = date_mise_marche_entry.get()
+    date_mise_marche = date_mise_marche_entry.get()
     prix = prix_entry.get()
 
     # Création d'un dictionnaire avec les valeurs saisies
@@ -388,7 +397,7 @@ def valider_saisie():
         'classe_energetique': classe_energetique,
         'annee_construction': annee_construction,
         'nature_gestion': nature_gestion,
-        #'date_mise_marche': date_mise_marche,
+        'date_mise_marche': date_mise_marche,
         'prix': prix
     }
 
@@ -559,10 +568,10 @@ filters_frame = ttk.Frame(root)
 filters_frame.pack(side=tk.LEFT, padx=10, pady=10)
 
 # Ajouter un champ de saisie pour le code postal
-cp_label = tk.Label(filters_frame, text="Code Postal:")
-cp_label.pack()
-cp_entry = tk.Entry(filters_frame)
-cp_entry.pack()
+annee_construction_label = tk.Label(filters_frame, text="Année de construction:")
+annee_construction_label.pack()
+annee_construction_entry = tk.Entry(filters_frame)
+annee_construction_entry.pack()
 ville_label = tk.Label(filters_frame, text="Ville:")
 ville_label.pack()
 ville_entry = tk.Entry(filters_frame)
@@ -578,25 +587,36 @@ vente_checkbox = tk.Checkbutton(filters_frame, text="Vente", variable=vente_var)
 vente_checkbox.pack()
 location_checkbox = tk.Checkbutton(filters_frame, text="Location", variable=location_var)
 location_checkbox.pack()
-type_immobilier_label = tk.Label(filters_frame, text="Nature de la gestion:")
+type_immobilier_label = tk.Label(filters_frame, text="Type de bien:")
 type_immobilier_label.pack()
 appartement_checkbox = tk.Checkbutton(filters_frame, text="Appartement", variable=appartement_var)
 appartement_checkbox.pack()
 maison_checkbox = tk.Checkbutton(filters_frame, text="Maison", variable=maison_var)
 maison_checkbox.pack()
-prix_min = tk.IntVar()
-prix_max = tk.IntVar()
-prix_min_scale = tk.Scale(root, from_=0, to=1000000, orient=tk.HORIZONTAL, variable=prix_min, label="Prix min")
-prix_min_scale.pack()
-prix_max_scale = tk.Scale(root, from_=0, to=1000000, orient=tk.HORIZONTAL, variable=prix_max, label="Prix max")
-prix_max_scale.pack()
-cp_entry.bind("<KeyRelease>", lambda event: update_table())
+
+filters_frame_right = ttk.Frame(root)
+filters_frame_right.pack()
+ville_label = tk.Label(filters_frame, text="Ville:")
+ville_label.pack()
+ville_entry = tk.Entry(filters_frame)
+ville_entry.pack()
+prix_min_label = tk.Label(filters_frame_right, text="Prix min:")
+prix_min_label.pack()
+prix_min_entry = tk.Entry(filters_frame_right)
+prix_min_entry.pack()
+prix_max_label = tk.Label(filters_frame_right, text="Prix max:")
+prix_max_label.pack()
+prix_max_entry = tk.Entry(filters_frame_right)
+prix_max_entry.pack()
+
+annee_construction_entry.bind("<KeyRelease>", lambda event: update_table())
 vente_checkbox.config(command=update_table)
 location_checkbox.config(command=update_table)
 appartement_checkbox.config(command=update_table)
 maison_checkbox.config(command=update_table)
-prix_min_scale.config(command=update_table)
-prix_max_scale.config(command=update_table)
+prix_max_entry.bind("<KeyRelease>", lambda event: update_table())
+prix_min_entry.bind("<KeyRelease>", lambda event: update_table())
+
 
 
 ville_entry.bind("<KeyRelease>", lambda event: update_table())
@@ -604,6 +624,8 @@ vente_checkbox.config(command=update_table)
 location_checkbox.config(command=update_table)
 maison_checkbox.config(command=update_table)
 appartement_checkbox.config(command=update_table)
+prix_min_entry.bind("<KeyRelease>", lambda event: update_table())
+prix_max_entry.bind("<KeyRelease>", lambda event: update_table())
 
 
 
