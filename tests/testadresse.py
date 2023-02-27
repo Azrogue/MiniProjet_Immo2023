@@ -66,10 +66,9 @@ def inserer_bien_immobilier(db_file, bien):
         classe_energetique,
         annee_construction,
         nature_gestion,
-        date_mise_marche TEXT,
         prix
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)
     """, (
         bien['type_immobilier'],
         bien['nr_adresse'],
@@ -83,7 +82,6 @@ def inserer_bien_immobilier(db_file, bien):
         bien['classe_energetique'],
         bien['annee_construction'],
         bien['nature_gestion'],
-        bien['date_mise_marche'],
         bien['prix']
     ))
 
@@ -216,10 +214,11 @@ def ouvrir_ajout_bien_immobilier():
     vente_radio = tk.Radiobutton(ajout_bien_immobilier_window, text="Vente", variable=nature_gestion_value, value="Vente")
     vente_radio.grid(row=8, column=2, padx=10, pady=10, sticky=tk.W)
 
+    """global date_mise_marche_entry
     date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise sur le marché :")
     date_mise_marche_label.grid(row=9, column=0, padx=10, pady=10, sticky=tk.W)
     date_mise_marche_entry = DateEntry(ajout_bien_immobilier_window, date_pattern='dd/MM/yyyy')
-    date_mise_marche_entry.grid(row=9, column=1, padx=10, pady=10, sticky=tk.W)
+    date_mise_marche_entry.grid(row=9, column=1, padx=10, pady=10, sticky=tk.W)"""
 
     #=====A METTRE AUTOMATIQUEMENT AVEC LOCAL.DATE EN SQL===#
     #date_mise_marche_label = tk.Label(ajout_bien_immobilier_window, text="Date de mise en marche :")
@@ -330,9 +329,10 @@ def update_table():
             continue
         if maison_value and row[1] != "Maison":
             continue
-        """if int(row[14]) < int(prix_max_value) or int(row[14]) > int(prix_min_value):
-            continue"""
-        
+        if prix_min_value and int(row[14]) < int(prix_min_value):
+            continue
+        if prix_max_value and int(row[14]) > int(prix_max_value):
+            continue
         filtered_data.append(row)
 
     # Insérer les données filtrées dans le Treeview
@@ -380,7 +380,6 @@ def valider_saisie():
     classe_energetique = classe_energetique_var.get()
     annee_construction = annee_construction_entry.get()
     nature_gestion = nature_gestion_value.get()
-    date_mise_marche = date_mise_marche_entry.get()
     prix = prix_entry.get()
 
     # Création d'un dictionnaire avec les valeurs saisies
@@ -397,7 +396,7 @@ def valider_saisie():
         'classe_energetique': classe_energetique,
         'annee_construction': annee_construction,
         'nature_gestion': nature_gestion,
-        'date_mise_marche': date_mise_marche,
+        #'date_mise_marche': date_mise_marche,
         'prix': prix
     }
 
