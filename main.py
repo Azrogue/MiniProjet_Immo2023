@@ -28,14 +28,15 @@ def create_database(db_file):
         nom_voie_adresse TEXT,
         cp_adresse INTEGER,
         nom_ville_adresse TEXT,
+        rue_complete TEXT,
         superficie_couvert REAL,
         superficie_jardin REAL,
         nombre_pieces INTEGER,
         classe_energetique TEXT,
         annee_construction INTEGER,
         nature_gestion TEXT,
-        date_mise_marche TEXT,
         prix REAL,
+        date_mise_marche TEXT,
         timestamp DATE DEFAULT (datetime('now','localtime'))
     )
     """)
@@ -58,6 +59,7 @@ def inserer_bien_immobilier(db_file, bien):
         nom_voie_adresse,
         cp_adresse,
         nom_ville_adresse,
+        rue_complete,
         superficie_couvert,
         superficie_jardin,
         nombre_pieces,
@@ -66,7 +68,7 @@ def inserer_bien_immobilier(db_file, bien):
         nature_gestion,
         prix
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)
     """, (
         bien['type_immobilier'],
         bien['nr_adresse'],
@@ -74,6 +76,7 @@ def inserer_bien_immobilier(db_file, bien):
         bien['nom_voie_adresse'],
         bien['cp_adresse'],
         bien['nom_ville_adresse'],
+        bien['rue_complete'],
         bien['superficie_couvert'],
         bien['superficie_jardin'],
         bien['nombre_pieces'],
@@ -263,7 +266,7 @@ def tableau_infos_bien():
     global table
     table = ttk.Treeview(root)
     table['columns'] = ['ID', 'type_immobilier', 'nr_adresse', 'type_voie_adresse', 'nom_voie_adresse',
-                        'cp_adresse', 'nom_ville_adresse', 'superficie_couvert', 'superficie_jardin',
+                        'cp_adresse','type_immobilier', 'nom_ville_adresse', 'superficie_couvert', 'superficie_jardin',
                         'nombre_pieces', 'classe_energetique', 'annee_construction', 'nature_gestion',
                         'prix', 'timestamp']
     table['show'] = 'headings'
@@ -373,6 +376,7 @@ def valider_saisie():
     type_voie_adresse = adresse_type_voie_var.get()
     nr_adresse = adresse_nr_entry.get()
     nom_ville_adresse = nom_ville_adresse_entry.get()
+    rue_complete = str("{} {} {}".format(nr_adresse, type_voie_adresse, nom_voie_adresse))
     superficie_couvert = superficie_couvert_entry.get()
     superficie_jardin = superficie_jardin_entry.get()
     nombre_pieces = nombre_pieces_entry.get()
@@ -390,6 +394,7 @@ def valider_saisie():
         'nom_voie_adresse' : nom_voie_adresse,
         'cp_adresse' : cp_adresse,
         'nom_ville_adresse' : nom_ville_adresse,
+        'rue_complete' : rue_complete,
         'superficie_couvert': superficie_couvert,
         'superficie_jardin': superficie_jardin,
         'nombre_pieces': nombre_pieces,
