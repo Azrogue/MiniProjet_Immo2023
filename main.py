@@ -4,9 +4,11 @@ import tkinter.ttk as ttk
 from tkinter import messagebox
 import sqlite3
 import time
+from ttkthemes import ThemedStyle
 from datetime import date
 import os
 from tkcalendar import Calendar,DateEntry
+
 
 
 
@@ -285,9 +287,11 @@ def tableau_infos_bien():
                         'nombre_pieces', 'classe_energetique', 'annee_construction', 'nature_gestion',
                         'prix', 'timestamp']
     table['show'] = 'headings'
+    
     for column in table['columns']:
         #if column != 'date_mise_marche':
         table.heading(column, text=column)
+        
 
     insertion_donnee_tableau()
 
@@ -462,7 +466,7 @@ def ouvrir_suppression_bien_immobilier():
     # Mettre à jour la liste des biens immobiliers dans la Listbox
     id_list.delete(0, tk.END)
     for bien in data:
-        id_list.insert(tk.END, (bien[0], bien[7], bien[6]))
+        id_list.insert(tk.END, (bien[0], bien[2], bien[4]))
 
 def supprimer_biens_selectionnes(selection):
     if not selection:
@@ -518,6 +522,8 @@ root = tk.Tk()
 root.withdraw()
 
 #Variables globales :
+style = ThemedStyle(root)
+style.set_theme("yaru") #plastik , 
 
 
 # Titre de la fenêtre
