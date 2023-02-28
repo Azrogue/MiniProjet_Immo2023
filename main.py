@@ -257,7 +257,7 @@ def recup_data_in_db():
     cursor = conn.cursor()
 
     # Récupérer les données de la table biens_immobiliers
-    cursor.execute("SELECT * FROM biens_immobiliers")
+    cursor.execute("SELECT ID, type_immobilier, rue_complete, cp_adresse, nom_ville_adresse, superficie_couvert, superficie_jardin, nombre_pieces, classe_energetique, annee_construction, nature_gestion, prix, timestamp FROM biens_immobiliers")
     data = cursor.fetchall()
     return data
 
@@ -293,7 +293,7 @@ def tableau_infos_bien():
 
     table.pack()
     
-
+    
     # Définir des largeurs par défaut pour certaines colonnes
     
     table.column('ID', width=50, minwidth=50)
