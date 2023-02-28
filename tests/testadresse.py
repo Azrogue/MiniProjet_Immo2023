@@ -449,7 +449,7 @@ def ouvrir_suppression_bien_immobilier():
     # Mettre à jour la liste des biens immobiliers dans la Listbox
     id_list.delete(0, tk.END)
     for bien in data:
-        id_list.insert(tk.END, (bien[0], bien[4], bien[6]))
+        id_list.insert(tk.END, (bien[0], bien[5], bien[6]))
 
 def supprimer_biens_selectionnes(selection):
     if not selection:
