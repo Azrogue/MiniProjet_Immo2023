@@ -4,10 +4,10 @@ import tkinter.ttk as ttk
 from tkinter import messagebox
 import sqlite3
 import time
-from ttkthemes import ThemedStyle
+#from ttkthemes import ThemedStyle
 from datetime import date
 import os
-from tkcalendar import Calendar,DateEntry
+#from tkcalendar import Calendar,DateEntry
 
 
 
@@ -522,8 +522,8 @@ root = tk.Tk()
 root.withdraw()
 
 #Variables globales :
-style = ThemedStyle(root)
-style.set_theme("yaru") #plastik , 
+#style = ThemedStyle(root)
+#style.set_theme("yaru") #plastik , 
 
 
 # Titre de la fenêtre
