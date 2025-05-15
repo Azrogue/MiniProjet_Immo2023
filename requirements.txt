@@ -1,5 +1,3 @@
-tkinter
-sqlite3
 ttkthemes
 tkcalendar
 pytest
