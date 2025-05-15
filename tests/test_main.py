@@ -4,8 +4,45 @@ import sqlite3
 import pytest
 from unittest import mock
 
-# Add parent directory to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Patch tkinter to avoid GUI initialization in CI environments
+import types
+import builtins
+
+# Simule un module tkinter minimal pour éviter l'erreur de display
+sys.modules["tkinter"] = types.ModuleType("tkinter")
+sys.modules["tkinter"].Tk = lambda *a, **kw: None
+sys.modules["tkinter"].Toplevel = lambda *a, **kw: None
+sys.modules["tkinter"].Label = lambda *a, **kw: None
+sys.modules["tkinter"].Entry = lambda *a, **kw: None
+sys.modules["tkinter"].Button = lambda *a, **kw: None
+sys.modules["tkinter"].Checkbutton = lambda *a, **kw: None
+sys.modules["tkinter"].Radiobutton = lambda *a, **kw: None
+sys.modules["tkinter"].Spinbox = lambda *a, **kw: None
+sys.modules["tkinter"].StringVar = lambda *a, **kw: None
+sys.modules["tkinter"].IntVar = lambda *a, **kw: None
+sys.modules["tkinter"].PhotoImage = lambda *a, **kw: None
+sys.modules["tkinter"].W = 0
+sys.modules["tkinter"].TOP = 0
+sys.modules["tkinter"].BOTTOM = 0
+sys.modules["tkinter"].LEFT = 0
+sys.modules["tkinter"].RIGHT = 0
+sys.modules["tkinter"].N = 0
+sys.modules["tkinter"].NE = 0
+sys.modules["tkinter"].Y = 0
+sys.modules["tkinter"].X = 0
+sys.modules["tkinter"].BOTH = 0
+sys.modules["tkinter"].END = 0
+sys.modules["tkinter"].messagebox = types.SimpleNamespace(askyesno=lambda *a, **k: True, showinfo=lambda *a, **k: None)
+
+# Patch ttk
+sys.modules["tkinter.ttk"] = types.ModuleType("ttk")
+sys.modules["tkinter.ttk"].Frame = lambda *a, **kw: None
+sys.modules["tkinter.ttk"].Scrollbar = lambda *a, **kw: None
+sys.modules["tkinter.ttk"].Treeview = lambda *a, **kw: None
+
+# Patch ttkthemes
+sys.modules["ttkthemes"] = types.ModuleType("ttkthemes")
+sys.modules["ttkthemes"].ThemedStyle = lambda *a, **kw: None
 
 from main import inserer_bien_immobilier, validate_input
 
