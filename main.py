@@ -261,11 +261,11 @@ def recup_data_in_db():
     # Récupérer les données de la table biens_immobiliers
     cursor.execute("SELECT ID, type_immobilier, rue_complete, cp_adresse, nom_ville_adresse, superficie_couvert, superficie_jardin, nombre_pieces, classe_energetique, annee_construction, nature_gestion, prix, timestamp FROM biens_immobiliers")
     data = cursor.fetchall()
-    return data
-
+    
     # Fermer la connexion à la base de données
     cursor.close()
     conn.close()
+    return data
 
 def insertion_donnee_tableau():
     global data
@@ -652,7 +652,7 @@ appartement_checkbox.config(command=update_table)
 maison_checkbox.config(command=update_table)
 prix_max_entry.bind("<KeyRelease>", lambda event: update_table())
 prix_min_entry.bind("<KeyRelease>", lambda event: update_table())
-superficie_min_entry.bind("<KeyRelease>", lambda event: update_table())
+superficie_max_entry.bind("<KeyRelease>", lambda event: update_table())
 superficie_min_entry.bind("<KeyRelease>", lambda event: update_table())
 
 #actualise la page en fonction des choix faits mais avec les autre choix possibles

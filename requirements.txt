@@ -1,0 +1,7 @@
+ttkthemes
+tkcalendar
+pytest
+pytest-cov
+flake8
+black
+pytest-mock
