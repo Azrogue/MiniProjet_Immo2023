@@ -1,5 +1,5 @@
-import os
 import sys
+import os
 import sqlite3
 import pytest
 from unittest import mock
