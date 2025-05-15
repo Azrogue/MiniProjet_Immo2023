@@ -1,8 +1,8 @@
-import pytest
-from unittest import mock
-import sqlite3
 import os
 import sys
+import sqlite3
+import pytest
+from unittest import mock
 
 # Add parent directory to Python path
 sys.path.insert(0, os.path.abspath(

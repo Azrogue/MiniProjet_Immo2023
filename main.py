@@ -1,15 +1,10 @@
 import tkinter as tk
-import tkinter.ttk as ttk
 from tkinter import messagebox
-import sqlite3
-import time
 from ttkthemes import ThemedStyle
 import os
-from tkcalendar import Calendar,DateEntry
-    # Si Calendar et DateEntry ne sont pas utilisés, supprimez-les de l'import :
-    # from tkcalendar import QuelqueChoseDAutreSiBesoin
-
-
+import sqlite3
+import time
+from tkinter import ttk
 
 # ===================================
 #              FONCTIONS
@@ -664,9 +659,6 @@ prix_min_entry.bind("<KeyRelease>", lambda event: update_table())
 prix_max_entry.bind("<KeyRelease>", lambda event: update_table())
 superficie_min_entry.bind("<KeyRelease>", lambda event: update_table())
 superficie_max_entry.bind("<KeyRelease>", lambda event: update_table())
-
-
-
 
 # Start the event loop
 root.deiconify()
