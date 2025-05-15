@@ -30,7 +30,9 @@ sys.modules["tkinter"].Y = 0
 sys.modules["tkinter"].X = 0
 sys.modules["tkinter"].BOTH = 0
 sys.modules["tkinter"].END = 0
-sys.modules["tkinter"].messagebox = types.SimpleNamespace(askyesno=lambda *a, **k: True, showinfo=lambda *a, **k: None)
+sys.modules["tkinter"].messagebox = types.SimpleNamespace(
+    askyesno=lambda *a, **k: True, showinfo=lambda *a, **k: None
+)
 
 # Patch ttk
 sys.modules["tkinter.ttk"] = types.ModuleType("ttk")
