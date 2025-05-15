@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 import sqlite3
 import pytest
 from unittest import mock
@@ -8,7 +8,6 @@ from unittest import mock
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..')))
 
-# create_database n'est plus directement utilisé par la fixture
 from main import inserer_bien_immobilier, validate_input
 
 TEST_DB = ":memory:"
