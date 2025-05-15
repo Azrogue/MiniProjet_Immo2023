@@ -1,4 +1,3 @@
-import os
 import sys
 import sqlite3
 import pytest
@@ -6,7 +5,6 @@ from unittest import mock
 
 # Patch tkinter to avoid GUI initialization in CI environments
 import types
-import builtins
 
 # Simule un module tkinter minimal pour éviter l'erreur de display
 sys.modules["tkinter"] = types.ModuleType("tkinter")
