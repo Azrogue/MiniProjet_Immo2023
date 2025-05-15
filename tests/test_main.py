@@ -5,9 +5,11 @@ import os
 import sys
 
 # Add parent directory to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..')))
 
-from main import inserer_bien_immobilier, validate_input # create_database n'est plus directement utilisé par la fixture
+# create_database n'est plus directement utilisé par la fixture
+from main import inserer_bien_immobilier, validate_input
 
 TEST_DB = ":memory:"
 
@@ -36,22 +38,27 @@ CREATE TABLE IF NOT EXISTS biens_immobiliers (
 
 @pytest.fixture
 def db_connection():
-    """Fixture to create an in-memory database connection with the schema applied."""
-    conn = sqlite3.connect(TEST_DB) # Crée une connexion à la base en mémoire
+    """Fixture to create an in-memory db connection with the schema applied."""
+    conn = sqlite3.connect(TEST_DB)  # Crée une connexion à la base en mémoire
     cursor = conn.cursor()
-    cursor.execute(TABLE_SCHEMA_DDL) # Applique le schéma
+    cursor.execute(TABLE_SCHEMA_DDL)  # Applique le schéma
     conn.commit()
-    yield conn # Fournit la connexion active aux tests
-    conn.close() # Ferme la connexion après le test
+    yield conn  # Fournit la connexion active aux tests
+    conn.close()  # Ferme la connexion après le test
 
-def test_database_schema_applied(db_connection): # Renommé pour refléter ce qu'il teste maintenant
-    """Test that the database schema (table) is correctly applied by the fixture."""
+
+# Renommé pour refléter ce qu'il teste maintenant
+def test_database_schema_applied(db_connection):
+    """Test that the db schema (table) is correctly applied by the fixture."""
     cursor = db_connection.cursor()
     # Verify table exists
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = [row[0] for row in cursor.fetchall()]
     assert "biens_immobiliers" in tables
 
+
+# E302: expected 2 blank lines, found 1
+# E302: expected 2 blank lines, found 1
 def test_inserer_bien_immobilier(db_connection):
     """Test property insertion"""
     test_property = {
@@ -72,13 +79,17 @@ def test_inserer_bien_immobilier(db_connection):
         'prix': '500000'
     }
 
-    # On utilise mock.patch pour que l'appel à sqlite3.connect dans main.inserer_bien_immobilier
+    # On utilise mock.patch pour que l'appel à sqlite3.connect
+    # dans main.inserer_bien_immobilier
     # utilise notre db_connection existante au lieu d'en créer une nouvelle.
     with mock.patch('main.sqlite3.connect') as mock_connect:
-        mock_connect.return_value = db_connection # Fait en sorte que sqlite3.connect retourne notre connexion
-        inserer_bien_immobilier(TEST_DB, test_property) # TEST_DB est toujours ":memory:"
+        # Fait en sorte que sqlite3.connect retourne notre connexion
+        mock_connect.return_value = db_connection
+        # TEST_DB est toujours ":memory:"
+        inserer_bien_immobilier(TEST_DB, test_property)
         # Vérifie que main.sqlite3.connect a été appelé comme prévu
         mock_connect.assert_called_once_with(TEST_DB)
+
 
     cursor = db_connection.cursor()
     cursor.execute("SELECT * FROM biens_immobiliers")
@@ -87,6 +98,8 @@ def test_inserer_bien_immobilier(db_connection):
     assert result[1] == 'Maison'
     assert result[4] == 'des Fleurs'
 
+
+# E302: expected 2 blank lines, found 1
 @pytest.mark.parametrize("input_value,expected", [
     ("123", True),
     ("45.67", True),
