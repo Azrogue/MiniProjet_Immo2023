@@ -12,82 +12,81 @@ from tkinter import ttk
 # Chemin de la base de données
 db_file = "bien_immo.sqlite"
 
-def create_database(db_file): #créationde la base de données
+def create_database(db_file):  # création de la base de données
     """Crée une base de données SQLite avec une table 'biens_immobiliers'"""
-
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
-
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS biens_immobiliers (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        type_immobilier TEXT,
-        nr_adresse TEXT,
-        type_voie_adresse TEXT,
-        nom_voie_adresse TEXT,
-        cp_adresse INTEGER,
-        nom_ville_adresse TEXT,
-        rue_complete TEXT,
-        superficie_couvert REAL,
-        superficie_jardin REAL,
-        nombre_pieces INTEGER,
-        classe_energetique TEXT,
-        annee_construction INTEGER,
-        nature_gestion TEXT,
-        prix REAL,
-        date_mise_marche TEXT,
-        timestamp DATE DEFAULT (datetime('now','localtime'))
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS biens_immobiliers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type_immobilier TEXT,
+            nr_adresse TEXT,
+            type_voie_adresse TEXT,
+            nom_voie_adresse TEXT,
+            cp_adresse INTEGER,
+            nom_ville_adresse TEXT,
+            rue_complete TEXT,
+            superficie_couvert REAL,
+            superficie_jardin REAL,
+            nombre_pieces INTEGER,
+            classe_energetique TEXT,
+            annee_construction INTEGER,
+            nature_gestion TEXT,
+            prix REAL,
+            date_mise_marche TEXT,
+            timestamp DATE DEFAULT (datetime('now','localtime'))
+        )
+        """
     )
-    """)
-
     conn.commit()
     conn.close()
 
-#fonction qu'ajoute les données dans la base de données
-def inserer_bien_immobilier(db_file, bien): 
-    """Insert un bien immobilier dans la table 'biens_immobiliers' de la base de données SQLite"""
+# Fonction qui ajoute les données dans la base de données
 
+def inserer_bien_immobilier(db_file, bien):
+    """Insère un bien immobilier dans la table 'biens_immobiliers' de la base de données SQLite"""
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
-
-    cursor.execute("""
-    INSERT INTO biens_immobiliers (
-        type_immobilier,
-        nr_adresse,
-        type_voie_adresse,
-        nom_voie_adresse,
-        cp_adresse,
-        nom_ville_adresse,
-        rue_complete,
-        superficie_couvert,
-        superficie_jardin,
-        nombre_pieces,
-        classe_energetique,
-        annee_construction,
-        nature_gestion,
-        date_mise_marche,
-        prix
+    cursor.execute(
+        """
+        INSERT INTO biens_immobiliers (
+            type_immobilier,
+            nr_adresse,
+            type_voie_adresse,
+            nom_voie_adresse,
+            cp_adresse,
+            nom_ville_adresse,
+            rue_complete,
+            superficie_couvert,
+            superficie_jardin,
+            nombre_pieces,
+            classe_energetique,
+            annee_construction,
+            nature_gestion,
+            date_mise_marche,
+            prix
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            bien['type_immobilier'],
+            bien['nr_adresse'],
+            bien['type_voie_adresse'],
+            bien['nom_voie_adresse'],
+            bien['cp_adresse'],
+            bien['nom_ville_adresse'],
+            bien['rue_complete'],
+            bien['superficie_couvert'],
+            bien['superficie_jardin'],
+            bien['nombre_pieces'],
+            bien['classe_energetique'],
+            bien['annee_construction'],
+            bien['nature_gestion'],
+            bien['date_mise_marche'],
+            bien['prix']
+        )
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)
-    """, (
-        bien['type_immobilier'],
-        bien['nr_adresse'],
-        bien['type_voie_adresse'],
-        bien['nom_voie_adresse'],
-        bien['cp_adresse'],
-        bien['nom_ville_adresse'],
-        bien['rue_complete'],
-        bien['superficie_couvert'],
-        bien['superficie_jardin'],
-        bien['nombre_pieces'],
-        bien['classe_energetique'],
-        bien['annee_construction'],
-        bien['nature_gestion'],
-        bien['date_mise_marche'],
-        bien['prix']
-    ))
-
-
     conn.commit()
     conn.close()
 
@@ -265,9 +264,7 @@ def insertion_donnee_tableau():
     global data
     data = recup_data_in_db()
     for row in data:
-        row = list(row)
-        #del row[13]  # Supprimer la colonne 'date_mise_marche' (l'indice de la colonne est 13)
-        table.insert('', tk.END, values=row)
+        table.insert('', 'end', values=row)
 
 #==============tabloooo================
 def tableau_infos_bien():
@@ -283,7 +280,6 @@ def tableau_infos_bien():
     table['show'] = 'headings'
     
     for column in table['columns']:
-        #if column != 'date_mise_marche':
         table.heading(column, text=column)
         
 
@@ -326,36 +322,33 @@ def update_table():
 
     # Filtrer les données de la base de données en fonction des choix de l'utilisateur
     filtered_data = []
-
     for row in data:
-        if ville_value and ville_value not in str(row[6]):
+        # Exemple de filtrage simple (à adapter selon vos besoins)
+        if annee_construction_value and str(row[9]) != annee_construction_value:
             continue
-        if annee_construction_value and annee_construction_value not in str(row[11]):
+        if ville_value and ville_value.lower() not in str(row[4]).lower():
             continue
-        if vente_value and row[12] != "Vente":
+        if vente_value and row[10] != 'Vente':
             continue
-        if location_value and row[12] != "Location":
+        if location_value and row[10] != 'Location':
             continue
-        if appartement_value and row[1] != "Appartement":
+        if appartement_value and row[1] != 'Appartement':
             continue
-        if maison_value and row[1] != "Maison":
+        if maison_value and row[1] != 'Maison':
             continue
-        if prix_min_value and int(row[14]) < int(prix_min_value):
+        if prix_min_value and float(row[11]) < float(prix_min_value):
             continue
-        if prix_max_value and int(row[14]) > int(prix_max_value):
+        if prix_max_value and float(row[11]) > float(prix_max_value):
             continue
-        if superficie_min_value and int(row[7]) < int(superficie_min_value):
+        if superficie_min_value and float(row[5]) < float(superficie_min_value):
             continue
-        if superficie_max_value and int(row[7]) > int(superficie_max_value):
+        if superficie_max_value and float(row[5]) > float(superficie_max_value):
             continue
         filtered_data.append(row)
 
     # Insérer les données filtrées dans le Treeview
     for row in filtered_data:
-        row = list(row)
-        #del row[13]
-        table.insert("", tk.END, values=row)
-
+        table.insert('', 'end', values=row)
 
 def actualiser_tableau():
     # Connexion à la base de données
@@ -372,7 +365,6 @@ def actualiser_tableau():
 def validate_input(new_value):
     if new_value == "":
         return True
-
     try:
         float(new_value)
         return True
@@ -381,8 +373,6 @@ def validate_input(new_value):
     
 def valider_saisie():
     """Récupère les valeurs saisies et les ajoute à la base de données"""
-
-    # Récupération des valeurs saisies dans les champs de saisie
     type_immobilier = type_immobilier_value.get()
     nom_voie_adresse = adresse_nomvoie_entry.get()
     cp_adresse = cp_adresse_entry.get()
@@ -398,16 +388,14 @@ def valider_saisie():
     nature_gestion = nature_gestion_value.get()
     date_mise_marche = f"{day_spinbox_value.get()}/{month_spinbox_value.get()}/{year_spinbox_value.get()}"
     prix = prix_entry.get()
-
-    # Création d'un dictionnaire avec les valeurs saisies
     bien = {
         'type_immobilier': type_immobilier,
-        'nr_adresse' : nr_adresse,
-        'type_voie_adresse' : type_voie_adresse,
-        'nom_voie_adresse' : nom_voie_adresse,
-        'cp_adresse' : cp_adresse,
-        'nom_ville_adresse' : nom_ville_adresse,
-        'rue_complete' : rue_complete,
+        'nr_adresse': nr_adresse,
+        'type_voie_adresse': type_voie_adresse,
+        'nom_voie_adresse': nom_voie_adresse,
+        'cp_adresse': cp_adresse,
+        'nom_ville_adresse': nom_ville_adresse,
+        'rue_complete': rue_complete,
         'superficie_couvert': superficie_couvert,
         'superficie_jardin': superficie_jardin,
         'nombre_pieces': nombre_pieces,
@@ -417,22 +405,16 @@ def valider_saisie():
         'date_mise_marche': date_mise_marche,
         'prix': prix
     }
-
-    # Ajout du bien immobilier dans la base de données
     inserer_bien_immobilier(db_file, bien)
-    
-
-    # Fermeture de la fenêtre d'ajout de bien immobilier
     ajout_bien_immobilier_window.destroy()
     actualiser_tableau()
 
-
-def centerWindow(width, height, root):  # Return 4 values needed to center Window
-    screen_width = root.winfo_screenwidth()  # Width of the screen
-    screen_height = root.winfo_screenheight() # Height of the screen     
-    x = (screen_width/2) - (width/2)
-    y = (screen_height/2) - (height/2)
-    return int(x), int(y)
+def centerWindow(width, height, root):
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x = int((screen_width / 2) - (width / 2))
+    y = int((screen_height / 2) - (height / 2))
+    return x, y
 
 def ouvrir_suppression_bien_immobilier():
     suppression_bien_window = tk.Toplevel(root)
@@ -548,6 +530,8 @@ root.geometry(f"{width}x{height}")
 
 # MAIN WINDOW CODE + Other Processing
 
+# Fonction pour fermer le splash screen
+
 def closeSplash():
     splash_screen.destroy()
 
@@ -556,14 +540,10 @@ time.sleep(4)
 
 # Vérification de l'existence de la base de données
 if not os.path.isfile(db_file):
-    root = tk.Tk()
-    root.withdraw()
-
     if messagebox.askyesno("Créer la base de données", "La base de données n'existe pas encore, voulez-vous la créer ?"):
         create_database(db_file)
     else:
-        messagebox.showinfo("Fermeture de Pymmobilier", "Le programme va se fermer")
-        exit()
+        root.destroy()
 
 #ajouter_bien_button = tk.Button(root, text="Ajouter un bien immobilier", command=ouvrir_ajout_bien_immobilier)
 #ajouter_bien_button.grid(row=0, column=0, padx=10, pady=10)
