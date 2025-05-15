@@ -1,14 +1,13 @@
 import tkinter as tk
-from tkinter import ttk
 import tkinter.ttk as ttk
 from tkinter import messagebox
 import sqlite3
 import time
 from ttkthemes import ThemedStyle
-from datetime import date
 import os
 from tkcalendar import Calendar,DateEntry
-
+    # Si Calendar et DateEntry ne sont pas utilisés, supprimez-les de l'import :
+    # from tkcalendar import QuelqueChoseDAutreSiBesoin
 
 
 
@@ -240,7 +239,7 @@ def ouvrir_ajout_bien_immobilier():
     global year_spinbox_value
     year_spinbox_value = tk.Spinbox(ajout_bien_immobilier_window, from_=1800, to=2023, width=4)
     year_spinbox_value.place(x=230, y=400)
-    
+
     # ajout du prix sous forme d'entrée
     prix_label = tk.Label(ajout_bien_immobilier_window, text="Prix :")
     prix_label.grid(row=10, column=0, padx=10, pady=10, sticky=tk.W)
@@ -277,7 +276,7 @@ def insertion_donnee_tableau():
 
 #==============tabloooo================
 def tableau_infos_bien():
-    data = recup_data_in_db()
+    # data = recup_data_in_db() # Inutile, insertion_donnee_tableau le fait déjà
 
     # Créer le tableau avec les données
     global table
@@ -285,7 +284,7 @@ def tableau_infos_bien():
     table['columns'] = ['ID', 'type_immobilier', 'rue_complete',
                         'cp_adresse', 'nom_ville_adresse', 'superficie_couvert', 'superficie_jardin',
                         'nombre_pieces', 'classe_energetique', 'annee_construction', 'nature_gestion',
-                        'prix', 'timestamp']
+                        'prix', 'timestamp'] # E231: 'prix','timestamp'] -> 'prix', 'timestamp']
     table['show'] = 'headings'
     
     for column in table['columns']:
@@ -365,7 +364,7 @@ def update_table():
 
 def actualiser_tableau():
     # Connexion à la base de données
-    data = recup_data_in_db()
+    # data = recup_data_in_db() # Inutile, insertion_donnee_tableau le fait déjà
 
     # Effacer le contenu actuel du tableau
     table = root.children['!treeview']
@@ -534,9 +533,9 @@ splash_screen = tk.Toplevel(background="white")
 splash_screen.overrideredirect(True)
 splash_screen.title("Splash Screen")
 x, y = centerWindow(600, 400, root)
-splash_screen.geometry(f"600x400+{x}+{y}")
-image = tk.PhotoImage(file="Assets/img/splash.png") 
-label = tk.Label(splash_screen, image = image)
+splash_screen.geometry(f"600x400+{x}+{y}") # E251: image = image -> image=image
+image = tk.PhotoImage(file="Assets/img/splash.png")
+label = tk.Label(splash_screen, image=image)
 label.pack()
 splash_screen.update()
 
