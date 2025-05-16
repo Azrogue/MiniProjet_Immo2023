@@ -1,53 +1,6 @@
-import sys
-import os
 import sqlite3
 import pytest
-from unittest import mock
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-# Patch tkinter to avoid GUI initialization in CI environments
-import types
-
-# Simule un module tkinter minimal pour éviter l'erreur de display
-sys.modules["tkinter"] = types.ModuleType("tkinter")
-sys.modules["tkinter"].Tk = lambda *a, **kw: None
-sys.modules["tkinter"].Toplevel = lambda *a, **kw: None
-sys.modules["tkinter"].Label = lambda *a, **kw: None
-sys.modules["tkinter"].Entry = lambda *a, **kw: None
-sys.modules["tkinter"].Button = lambda *a, **kw: None
-sys.modules["tkinter"].Checkbutton = lambda *a, **kw: None
-sys.modules["tkinter"].Radiobutton = lambda *a, **kw: None
-sys.modules["tkinter"].Spinbox = lambda *a, **kw: None
-sys.modules["tkinter"].StringVar = lambda *a, **kw: None
-sys.modules["tkinter"].IntVar = lambda *a, **kw: None
-sys.modules["tkinter"].PhotoImage = lambda *a, **kw: None
-sys.modules["tkinter"].W = 0
-sys.modules["tkinter"].TOP = 0
-sys.modules["tkinter"].BOTTOM = 0
-sys.modules["tkinter"].LEFT = 0
-sys.modules["tkinter"].RIGHT = 0
-sys.modules["tkinter"].N = 0
-sys.modules["tkinter"].NE = 0
-sys.modules["tkinter"].Y = 0
-sys.modules["tkinter"].X = 0
-sys.modules["tkinter"].BOTH = 0
-sys.modules["tkinter"].END = 0
-sys.modules["tkinter"].messagebox = types.SimpleNamespace(
-    askyesno=lambda *a, **k: True, showinfo=lambda *a, **k: None
-)
-
-# Patch ttk
-sys.modules["tkinter.ttk"] = types.ModuleType("ttk")
-sys.modules["tkinter.ttk"].Frame = lambda *a, **kw: None
-sys.modules["tkinter.ttk"].Scrollbar = lambda *a, **kw: None
-sys.modules["tkinter.ttk"].Treeview = lambda *a, **kw: None
-
-# Patch ttkthemes
-sys.modules["ttkthemes"] = types.ModuleType("ttkthemes")
-sys.modules["ttkthemes"].ThemedStyle = lambda *a, **kw: None
-
-from main import inserer_bien_immobilier, validate_input
+from database import inserer_bien_immobilier, validate_input
 
 TEST_DB = ":memory:"
 
@@ -83,7 +36,7 @@ def db_connection():
     cursor.execute(TABLE_SCHEMA_DDL)  # Applique le schéma
     conn.commit()
     yield conn  # Fournit la connexion active aux tests
-    conn.close()  # Ferme la connexion après le test
+    conn.rollback()  # Nettoie les changements après le test
 
 
 # Renommé pour refléter ce qu'il teste maintenant
@@ -118,17 +71,10 @@ def test_inserer_bien_immobilier(db_connection):
         "prix": "500000",
     }
 
-    # On utilise mock.patch pour que l'appel à sqlite3.connect
-    # dans main.inserer_bien_immobilier
-    # utilise notre db_connection existante au lieu d'en créer une nouvelle.
-    with mock.patch("main.sqlite3.connect") as mock_connect:
-        # Fait en sorte que sqlite3.connect retourne notre connexion
-        mock_connect.return_value = db_connection
-        # TEST_DB est toujours ":memory:"
-        inserer_bien_immobilier(TEST_DB, test_property)
-        # Vérifie que main.sqlite3.connect a été appelé comme prévu
-        mock_connect.assert_called_once_with(TEST_DB)
-
+    # Test direct de la fonction d'insertion avec la connexion existante
+    inserer_bien_immobilier(None, test_property, conn=db_connection)
+    
+    # Vérification des données insérées
     cursor = db_connection.cursor()
     cursor.execute("SELECT * FROM biens_immobiliers")
     result = cursor.fetchone()
