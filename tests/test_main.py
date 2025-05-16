@@ -73,7 +73,7 @@ def test_inserer_bien_immobilier(db_connection):
 
     # Test direct de la fonction d'insertion avec la connexion existante
     inserer_bien_immobilier(None, test_property, conn=db_connection)
-    
+
     # Vérification des données insérées
     cursor = db_connection.cursor()
     cursor.execute("SELECT * FROM biens_immobiliers")
